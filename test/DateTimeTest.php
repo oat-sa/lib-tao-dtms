@@ -1,9 +1,9 @@
 <?php
 
-namespace alroniks\dtms\Test;
+namespace oat\dtms\Test;
 
-use alroniks\dtms\DateInterval;
-use alroniks\dtms\DateTime;
+use oat\dtms\DateInterval;
+use oat\dtms\DateTime;
 
 class DateTimeTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,7 +27,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::getMicroseconds
+     * @covers oat\dtms\DateTime::getMicroseconds
      */
     public function testSetMicroseconds()
     {
@@ -48,7 +48,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::getMicroseconds
+     * @covers oat\dtms\DateTime::getMicroseconds
      */
     public function testGetMicroseconds()
     {
@@ -63,7 +63,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::createFromFormat
+     * @covers oat\dtms\DateTime::createFromFormat
      */
     public function testCreateFromFormat()
     {
@@ -74,12 +74,12 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::__construct
+     * @covers oat\dtms\DateTime::__construct
      */
     public function testConstruct()
     {
         $dt = new DateTime();
-        $this->assertInstanceOf('alroniks\\dtms\\DateTime', $dt);
+        $this->assertInstanceOf('oat\\dtms\\DateTime', $dt);
         $this->assertObjectHasAttribute('microseconds', $dt);
 
         $dt = new DateTime('2015-08-08 10:10:10.123456');
@@ -87,7 +87,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::getTimestampWithMicroseconds
+     * @covers oat\dtms\DateTime::getTimestampWithMicroseconds
      */
     public function testGetTimestampWithMicroseconds()
     {
@@ -96,7 +96,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::addMicroseconds
+     * @covers oat\dtms\DateTime::addMicroseconds
      */
     public function testAddMicroseconds()
     {
@@ -128,7 +128,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::subMicroseconds
+     * @covers oat\dtms\DateTime::subMicroseconds
      */
     public function testSubMicroseconds()
     {
@@ -160,7 +160,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::add
+     * @covers oat\dtms\DateTime::add
      */
     public function testAdd()
     {
@@ -199,7 +199,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::sub
+     * @covers oat\dtms\DateTime::sub
      */
     public function testSub()
     {
@@ -238,7 +238,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::modify
+     * @covers oat\dtms\DateTime::modify
      */
     public function testModify()
     {
@@ -316,7 +316,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::diff
+     * @covers oat\dtms\DateTime::diff
      */
     public function testDiff()
     {
@@ -362,7 +362,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::__toString
+     * @covers oat\dtms\DateTime::__toString
      */
     public function testToString()
     {
@@ -377,7 +377,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers alroniks\dtms\DateTime::format
+     * @covers oat\dtms\DateTime::format
      */
     public function testFormat()
     {

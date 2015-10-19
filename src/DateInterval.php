@@ -1,6 +1,6 @@
 <?php
 
-namespace alroniks\dtms;
+namespace oat\dtms;
 
 class DateInterval extends \DateInterval
 {

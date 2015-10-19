@@ -1,4 +1,4 @@
-# DateTime with Microseconds ![](https://travis-ci.org/Alroniks/dtms.svg)
+# DateTime with Microseconds ![](https://travis-ci.org/oat-sa/lib-tao-dtms.svg)
 
 DateTime and DateInterval classes with support of microseconds
 
@@ -11,13 +11,13 @@ This small package with two classes just wrapper around built in PHP classes for
 Package use PSR-4 standard, so for using this classes just install package using Composer.
 
 ```bash
-$ composer require alroniks/dtms
+$ composer require oat-sa/lib-tao-dtms
 ```
 
 ```json
 {
     "require": {
-        "alroniks/dtms": "~0.5"
+        "oat-sa/lib-tao-dtms": "~0.5"
     }
 }
 ```
@@ -26,8 +26,8 @@ $ composer require alroniks/dtms
 <?php
 require 'vendor/autoload.php';
 
-use alroniks\dtms\DateTime;
-use alroniks\dtms\DateInterval;
+use oat\dtms\DateTime;
+use oat\dtms\DateInterval;
 
 ```
 
@@ -71,9 +71,12 @@ If you found error or weird behavior, send me [issue report](/issues/new), pleas
 ## Credits
 
 - [Ivan Klimchuk](http://klimchuk.com), [Alroniks](https://github.com/Alroniks)
+- [Open Assessment Technologies S.A.](http://www.taotesting.com/), [OAT](https://github.com/oat-sa)
+
+Developed by Ivan Klimchuk for Open Assessment Technologies S.A.
 
 ## License
 
-The MIT License (MIT). Please see [LICENSE](/LICENSE) for more information.
+The GPLv2. Please see [LICENSE](/LICENSE) for more information.
 
  

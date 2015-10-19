@@ -1,11 +1,14 @@
 {
-    "name": "alroniks/dtms",
+    "name": "oat-sa/lib-tao-dtms",
     "type": "library",
     "description": "Classes for manipulate dates and intervals with microseconds precision",
     "keywords": ["date", "time", "datetime", "ms", "microseconds", "milliseconds", "interval", "ISO8601", "fractions"],
-    "license": "MIT",
-    "homepage": "http://alroniks.github.io/dtms",
+    "license": "GPLv2",
     "authors": [
+        {
+            "name": "Open Assessment Technologies S.A.",
+            "homepage": "http://www.taotesting.com"
+        },
         {
             "name": "Ivan Klimchuk",
             "email": "ivan@klimchuk.com",
@@ -14,7 +17,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/alroniks/dtms/issues"
+        "forum": "http://forum.taotesting.com",
+        "issues": "https://github.com/oat-sa/lib-tao-dtms/issues"
     },
     "require": {
         "php" : ">=5.3.0"
@@ -24,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "alroniks\\dtms\\": "src"
+            "oat\\dtms\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "alroniks\\dtms\\Test\\": "test"
+            "oat\\dtms\\Test\\": "test"
         }
     }
 }
