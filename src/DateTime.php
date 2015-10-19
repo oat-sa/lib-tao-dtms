@@ -239,7 +239,7 @@ class DateTime extends \DateTime
         $seconds = intval($diff);
         $microseconds = round($diff - $seconds, 6) * 1e6;
 
-        $now = new \DateTime($d1);
+        $now = new \DateTime($d2);
         $start = $now->getTimestamp();
 
         $operation = $negative ? 'sub' : 'add';
