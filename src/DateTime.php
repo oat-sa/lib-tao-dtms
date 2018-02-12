@@ -230,7 +230,6 @@ class DateTime extends \DateTime
         $d1Ts = $d1->getTimestampWithMicroseconds();
         $d2Ts = $d2->getTimestampWithMicroseconds();
         $negative = $d1Ts > $d2Ts;
-        $invert = $absolute ? false : $negative;
 
         $d1s = intval($d1Ts);
         $d2s = intval($d2Ts);
@@ -260,7 +259,7 @@ class DateTime extends \DateTime
 
 
         $interval->u = round($u, 6) * 1e6;
-        $interval->invert = $invert;
+        $interval->invert = $absolute ? false : $negative;;
 
         return $interval;
     }
