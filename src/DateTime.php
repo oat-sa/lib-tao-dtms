@@ -250,8 +250,7 @@ class DateTime extends \DateTime
         }
 
         if ($comparison) {
-            $sign = $negative ? '+' : '-';
-            $d2->modify("${sign}1 second");
+            $d2->modify(($negative ? '+' : '-') . '1 second');
         }
 
         $interval = new DateInterval('PT0.000000S');
@@ -259,9 +258,8 @@ class DateTime extends \DateTime
             $interval->{$property} = $value;
         }
 
-        $u = round($u, 6) * 1e6;
 
-        $interval->u = $u;
+        $interval->u = round($u, 6) * 1e6;
         $interval->invert = $invert;
 
         return $interval;
