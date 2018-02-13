@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Classes for manipulate dates and intervals with microseconds precision",
     "keywords": ["date", "time", "datetime", "ms", "microseconds", "milliseconds", "interval", "ISO8601", "fractions"],
-    "license": "GPLv2",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "Open Assessment Technologies S.A.",
