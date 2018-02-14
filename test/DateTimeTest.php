@@ -27,7 +27,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::getMicroseconds
+     * @covers \oat\dtms\DateTime::getMicroseconds
      */
     public function testSetMicroseconds()
     {
@@ -48,7 +48,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::getMicroseconds
+     * @covers \oat\dtms\DateTime::getMicroseconds
      */
     public function testGetMicroseconds()
     {
@@ -63,7 +63,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::createFromFormat
+     * @covers \oat\dtms\DateTime::createFromFormat
      */
     public function testCreateFromFormat()
     {
@@ -74,7 +74,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::__construct
+     * @covers \oat\dtms\DateTime::__construct
      */
     public function testConstruct()
     {
@@ -87,7 +87,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::getTimestampWithMicroseconds
+     * @covers \oat\dtms\DateTime::getTimestampWithMicroseconds
      */
     public function testGetTimestampWithMicroseconds()
     {
@@ -96,7 +96,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::addMicroseconds
+     * @covers \oat\dtms\DateTime::addMicroseconds
      */
     public function testAddMicroseconds()
     {
@@ -128,7 +128,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::subMicroseconds
+     * @covers \oat\dtms\DateTime::subMicroseconds
      */
     public function testSubMicroseconds()
     {
@@ -160,7 +160,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::add
+     * @covers \oat\dtms\DateTime::add
      */
     public function testAdd()
     {
@@ -199,7 +199,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::sub
+     * @covers \oat\dtms\DateTime::sub
      */
     public function testSub()
     {
@@ -238,7 +238,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::modify
+     * @covers \oat\dtms\DateTime::modify
      */
     public function testModify()
     {
@@ -316,10 +316,11 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::diff
+     * @covers \oat\dtms\DateTime::diff
      */
     public function testDiff()
     {
+        // Using oat\dtms\DateTime objects for both date 1 & date 2.
         $dt1 = new DateTime('2005-10-10 23:57:01.100000');
         $dt2 = new DateTime('2005-10-10 23:59:01.050000');
         $this->assertEquals('+PT1M59.950000S', $dt1->diff($dt2)->format('%RPT%iM%sS'));
@@ -355,8 +356,8 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 
         $dt1 = new DateTime('2015-08-08 10:10:10.123456');
         $dt2 = new DateTime('2015-08-18 10:10:05.654321');
-        $this->assertEquals('+P9DT55.530865S', $dt1->diff($dt2)->format('%RP%dDT%sS'));
-        $this->assertEquals('-P9DT55.530865S', $dt2->diff($dt1)->format('%RP%dDT%sS'));
+        $this->assertEquals('+P9DT23H59M55.530865S', $dt1->diff($dt2)->format('%RP%dDT%hH%iM%sS'));
+        $this->assertEquals('-P9DT23H59M55.530865S', $dt2->diff($dt1)->format('%RP%dDT%hH%iM%sS'));
 
         $dt1 = new DateTime('2015-08-08 10:10:10.123456');
         $dt2 = new DateTime('2015-12-12 10:10:10.123456');
@@ -365,12 +366,56 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 
         $dt1 = new DateTime('2015-08-10 10:10:10.101010');
         $dt2 = new DateTime('2018-08-14 16:18:10.101010');
-        $this->assertEquals('+P3Y0M4DT6H8I0S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iI%sS'));
-        $this->assertEquals('-P3Y0M4DT6H8I0S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iI%sS'));
+        $this->assertEquals('+P3Y0M4DT6H8M0S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+        $this->assertEquals('-P3Y0M4DT6H8M0S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+
+        // Using oat\dtms\DateTime objects as date 1 & \DateTime as date 2.
+        $dt1 = new DateTime('2005-10-10 23:57:01.100000');
+        $dt2 = new \DateTime('2005-10-10 23:59:01');
+        $this->assertEquals('+PT1M59.900000S', $dt1->diff($dt2)->format('%RPT%iM%sS'));
+
+        $dt1 = new DateTime('2005-10-10 23:59:01.555554');
+        $dt2 = new \DateTime('2005-12-30 23:59:01');
+        $this->assertEquals('+P2M19DT59.444446S', $dt1->diff($dt2)->format('%RP%mM%dDT%sS'));
+
+        $dt1 = new DateTime('2015-08-08 10:10:10.123456');
+        $dt2 = new \DateTime('2015-08-08 10:10:05');
+        $this->assertEquals('-PT5.123456S', $dt1->diff($dt2)->format('%RPT%sS'));
+        $this->assertEquals('+PT5S', $dt2->diff($dt1)->format('%RPT%sS'));
+
+        $dt1 = new DateTime('2015-08-08 10:10:10.123456');
+        $dt2 = new \DateTime('2015-08-08 10:10:15');
+        $this->assertEquals('+PT4.876544S', $dt1->diff($dt2)->format('%RPT%sS'));
+        $this->assertEquals('-PT5S', $dt2->diff($dt1)->format('%RPT%sS'));
+
+        $dt1 = new DateTime('2015-08-08 10:10:10.123456');
+        $dt2 = new \DateTime('2015-08-08 10:10:10');
+        $this->assertEquals('-PT0.123456S', $dt1->diff($dt2)->format('%RPT%sS'));
+        $this->assertEquals('+PT0S', $dt2->diff($dt1)->format('%RPT%sS'));
+
+        $dt1 = new DateTime('2015-08-08 10:10:10.123456');
+        $dt2 = new \DateTime('2015-08-08 10:10:11');
+        $this->assertEquals('+PT0.876544S', $dt1->diff($dt2, true)->format('%RPT%sS'));
+        $this->assertEquals('+PT1S', $dt2->diff($dt1, true)->format('%RPT%sS'));
+
+        $dt1 = new DateTime('2015-08-08 10:10:10.123456');
+        $dt2 = new \DateTime('2015-08-18 10:10:05');
+        $this->assertEquals('+P9DT23H59M54.876544S', $dt1->diff($dt2)->format('%RP%dDT%hH%iM%sS'));
+        $this->assertEquals('-P9DT23H59M55S', $dt2->diff($dt1)->format('%RP%dDT%hH%iM%sS'));
+
+        $dt1 = new DateTime('2015-08-08 10:10:10.123456');
+        $dt2 = new \DateTime('2015-12-12 10:10:10');
+        $this->assertEquals('+P4M3DT23H59M59.876544S', $dt1->diff($dt2)->format('%RP%mM%dDT%hH%iM%sS'));
+        $this->assertEquals('-P4M4DT0S', $dt2->diff($dt1)->format('%RP%mM%dDT%sS'));
+
+        $dt1 = new DateTime('2015-08-10 10:10:10.101010');
+        $dt2 = new \DateTime('2018-08-14 16:18:10');
+        $this->assertEquals('+P3Y0M4DT6H7M59.898990S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+        $this->assertEquals('-P3Y0M4DT6H8M0S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
     }
 
     /**
-     * @covers oat\dtms\DateTime::__toString
+     * @covers \oat\dtms\DateTime::__toString
      */
     public function testToString()
     {
@@ -385,7 +430,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers oat\dtms\DateTime::format
+     * @covers \oat\dtms\DateTime::format
      */
     public function testFormat()
     {
