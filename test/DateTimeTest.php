@@ -456,6 +456,32 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $dt2 = new \DateTime('1985-11-27 10:00:10');
         $this->assertEquals('+P0Y0M0DT0H0M4.010000S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
         $this->assertEquals('-P0Y0M0DT0H0M5S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+
+        // Using DateTime objects as date 1 AND oat\dtms\DateTime as date 2.
+        $dt1 = new \DateTime('2005-10-10 23:57:01');
+        $dt2 = new DateTime('2005-10-10 23:59:01.050000');
+        $this->assertEquals('+PT2M0S', $dt1->diff($dt2)->format('%RPT%iM%sS'));
+        $this->assertEquals('-PT2M0.050000S', $dt2->diff($dt1)->format('%RPT%iM%sS'));
+
+        $dt1 = new \DateTime('2005-10-10 23:59:01');
+        $dt2 = new DateTime('2005-12-30 23:59:01.555555');
+        $this->assertEquals('+P2M20DT0S', $dt1->diff($dt2)->format('%RP%mM%dDT%sS'));
+        $this->assertEquals('-P2M20DT0.555555S', $dt2->diff($dt1)->format('%RP%mM%dDT%sS'));
+
+        $dt1 = new \DateTime('2015-08-08 10:10:10');
+        $dt2 = new DateTime('2015-08-08 10:10:05.654321');
+        $this->assertEquals('-PT5S', $dt1->diff($dt2)->format('%RPT%sS'));
+        $this->assertEquals('+PT4.345679S', $dt2->diff($dt1)->format('%RPT%sS'));
+
+        $dt1 = new \DateTime('2015-08-08 10:10:10');
+        $dt2 = new DateTime('2015-08-08 10:10:10.123455');
+        $this->assertEquals('+PT0S', $dt1->diff($dt2)->format('%RPT%sS'));
+        $this->assertEquals('-PT0.123455S', $dt2->diff($dt1)->format('%RPT%sS'));
+
+        $dt1 = new \DateTime('2015-08-08 10:10:10');
+        $dt2 = new DateTime('2015-08-08 10:10:15.654321');
+        $this->assertEquals('+PT5S', $dt1->diff($dt2)->format('%RPT%sS'));
+        $this->assertEquals('-PT5.654321S', $dt2->diff($dt1)->format('%RPT%sS'));
     }
 
     /**
