@@ -221,11 +221,19 @@ class DateTime extends \DateTime
      * @param \DateTime $datetime
      * @param bool|false $absolute
      * @return DateInterval
+     * @throws \InvalidArgumentException In case of $datetime is not a DateTime nor a oat\dtms\DateTime object.
      */
     public function diff($datetime, $absolute = false)
     {
         $d1 = clone $this;
-        $d2 = $datetime instanceof \DateTime ? new static($datetime->format(DateTime::ISO8601)) : clone $datetime;
+
+        if ($datetime instanceof \DateTime) {
+            $d2 = new static($datetime->format(DateTime::ISO8601));
+        } elseif ($datetime instanceof DateTime) {
+            $d2 = clone $datetime;
+        } else {
+            throw new \InvalidArgumentException('First Argument must be an instance of DateTime or oat\dtms\DateTime');
+        }
 
         $d1Ts = $d1->getTimestampWithMicroseconds();
         $d2Ts = $d2->getTimestampWithMicroseconds();

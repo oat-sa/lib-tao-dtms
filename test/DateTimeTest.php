@@ -529,6 +529,12 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('-P0Y0M0DT0H0M5.009999S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
     }
 
+    public function testDiffInvalidArgument() {
+        $this->setExpectedException('\InvalidArgumentException');
+        $dt1 = new DateTime('1985-11-27 10:00:05.990000');
+        $diff = $dt1->diff(new \stdClass());
+    }
+
     /**
      * @covers \oat\dtms\DateTime::__toString
      */
