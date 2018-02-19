@@ -221,36 +221,53 @@ class DateTime extends \DateTime
      * @param \DateTime $datetime
      * @param bool|false $absolute
      * @return DateInterval
+     * @throws \InvalidArgumentException In case of $datetime is not a DateTime nor a oat\dtms\DateTime object.
      */
     public function diff($datetime, $absolute = false)
     {
         $d1 = clone $this;
-        $d2 = $datetime instanceof \DateTime ? new static($datetime->format(DateTime::ISO8601)) : clone $datetime;
+
+        if ($datetime instanceof \DateTime) {
+            $d2 = new static($datetime->format(DateTime::ISO8601));
+        } elseif ($datetime instanceof DateTime) {
+            $d2 = clone $datetime;
+        } else {
+            throw new \InvalidArgumentException('First Argument must be an instance of DateTime or oat\dtms\DateTime');
+        }
+
+        $d1Ts = $d1->getTimestampWithMicroseconds();
+        $d2Ts = $d2->getTimestampWithMicroseconds();
+        $negative = $d1Ts > $d2Ts;
+
+        $d1s = intval($d1Ts);
+        $d2s = intval($d2Ts);
+        $d1u = round($d1Ts - $d1s, 6);
+        $d2u = round($d2Ts - $d2s, 6);
+
+        if (!$negative) {
+            $comparison = $d2u < $d1u;
+            $u = $d2u - $d1u;
+        } else {
+            $comparison = $d2u > $d1u;
+            $u = $d1u - $d2u;
+        }
+
+        if ($u < 0) {
+            $u += 1;
+        }
+
+        if ($comparison) {
+            $d2->modify(($negative ? '+' : '-') . '1 second');
+        }
 
         $interval = new DateInterval('PT0.000000S');
-        foreach (get_object_vars(parent::diff($datetime)) as $property => $value) {
+        foreach (get_object_vars(parent::diff($d2)) as $property => $value) {
             $interval->{$property} = $value;
         }
-        $interval->s = 0;
 
-        $negative = $d1->getTimestampWithMicroseconds() > $d2->getTimestampWithMicroseconds();
-        $diff = abs($d1->getTimestampWithMicroseconds() - $d2->getTimestampWithMicroseconds());
 
-        $seconds = intval($diff);
-        $microseconds = round($diff - $seconds, 6) * 1e6;
-
-        $now = new \DateTime($d2);
-        $start = $now->getTimestamp();
-
-        $operation = $negative ? 'sub' : 'add';
-        $now->$operation($interval);
-
-        $end = $now->getTimestamp();
-        $antiseconds = abs($end - $start);
-
-        $interval->s = $seconds - $antiseconds;
-        $interval->u = $microseconds;
-        $interval->invert = $absolute ? false : $negative;
+        $interval->u = round($u, 6) * 1e6;
+        $interval->invert = $absolute ? false : $negative;;
 
         return $interval;
     }
