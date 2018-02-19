@@ -391,6 +391,11 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('+P0Y0M0DT0H0M5.009999S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
         $this->assertEquals('-P0Y0M0DT0H0M5.009999S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
 
+        $dt1 = new DateTime('1985-11-27 10:00:05.555555');
+        $dt2 = new DateTime('2017-09-28 10:00:10.555556');
+        $this->assertEquals('+P31Y10M1DT0H0M5.000001S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+        $this->assertEquals('-P31Y10M1DT0H0M5.000001S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+
         // Using oat\dtms\DateTime objects as date 1 AND \DateTime as date 2.
         $dt1 = new DateTime('2005-10-10 23:57:01.100000');
         $dt2 = new \DateTime('2005-10-10 23:59:01');
@@ -456,6 +461,11 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $dt2 = new \DateTime('1985-11-27 10:00:10');
         $this->assertEquals('+P0Y0M0DT0H0M4.010000S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
         $this->assertEquals('-P0Y0M0DT0H0M5S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+
+        $dt1 = new DateTime('1985-11-27 10:00:05.555555');
+        $dt2 = new \DateTime('2017-09-28 10:00:10');
+        $this->assertEquals('+P31Y10M1DT0H0M4.444445S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+        $this->assertEquals('-P31Y10M1DT0H0M5S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
 
         // Using DateTime objects as date 1 AND oat\dtms\DateTime as date 2.
         $dt1 = new \DateTime('2005-10-10 23:57:01');
@@ -527,6 +537,11 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $dt2 = new DateTime('1985-11-27 10:00:10.999999');
         $this->assertEquals('+P0Y0M0DT0H0M5S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
         $this->assertEquals('-P0Y0M0DT0H0M5.009999S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+
+        $dt1 = new \DateTime('1985-11-27 10:00:05.555555');
+        $dt2 = new DateTime('2017-09-28 10:00:10.555556');
+        $this->assertEquals('+P31Y10M1DT0H0M5S', $dt1->diff($dt2)->format('%RP%yY%mM%dDT%hH%iM%sS'));
+        $this->assertEquals('-P31Y10M1DT0H0M5.000001S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
     }
 
     public function testDiffInvalidArgument() {
