@@ -276,9 +276,8 @@ class DateTime extends \DateTime
      * Returns date formatted according to given format.
      *
      * @param string $format
-     * @return string
      */
-    public function format($format)
+    public function format($format): string
     {
         $format = str_replace('u', sprintf('%06d', $this->microseconds), $format);
 
