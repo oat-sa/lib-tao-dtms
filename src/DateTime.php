@@ -1,15 +1,36 @@
 <?php
 
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2022 (original work) Open Assessment Technologies SA.
+ */
+
 namespace oat\dtms;
 
 use DateTimeZone;
+use DateTime as BaseDateTime;
+use InvalidArgumentException;
+use DateInterval as BaseDateInterval;
 
-class DateTime extends \DateTime
+class DateTime extends BaseDateTime
 {
     /**
      * Improved ISO8601 format string with support of microseconds.
      */
-    const ISO8601 = 'Y-m-d\TH:i:s.u\Z';
+    public const ISO8601 = 'Y-m-d\TH:i:s.u\Z';
 
     /**
      * @var int Current number of microseconds.
@@ -47,7 +68,8 @@ class DateTime extends \DateTime
      * @param string $format
      * @param string $time
      * @param null $timezone
-     * @return DateTime|\DateTime
+     *
+     * @return DateTime|BaseDateTime
      */
     public static function createFromFormat($format, $time, $timezone = null)
     {
@@ -55,7 +77,7 @@ class DateTime extends \DateTime
             $timezone = new DateTimeZone(date_default_timezone_get());
         }
 
-        $datetime = \DateTime::createFromFormat($format, $time, $timezone);
+        $datetime = BaseDateTime::createFromFormat($format, $time, $timezone);
 
         return new self($datetime->format(DateTime::ISO8601), $timezone);
     }
@@ -66,24 +88,24 @@ class DateTime extends \DateTime
      * @param string $time
      * @param DateTimeZone|null $timezone
      */
-    public function __construct($time = 'now', \DateTimeZone $timezone = null)
+    public function __construct($time = 'now', DateTimeZone $timezone = null)
     {
         if ($timezone === null) {
             $timezone = new DateTimeZone(date_default_timezone_get());
         }
 
-        $nativeTime = new \DateTime($time, $timezone);
-        list($u, $s) = $time == 'now'
+        $nativeTime = new BaseDateTime($time, $timezone);
+        [$u, $s] = $time == 'now'
             ? explode(' ', microtime())
             : array(
                 $nativeTime->format('u') / 1e6,
                 $nativeTime->getTimestamp()
             );
 
-        $time = \DateTime::createFromFormat('U.u', join('.', array($s, str_replace('0.', '', sprintf('%6f', $u)))));
+        $time = BaseDateTime::createFromFormat('U.u', join('.', array($s, str_replace('0.', '', sprintf('%6f', $u)))));
         $this->microseconds = $time->format('u') ?: 0;
 
-        return parent::__construct($time->format(static::ISO8601), $timezone);
+        parent::__construct($time->format(static::ISO8601), $timezone);
     }
 
     /**
@@ -104,7 +126,7 @@ class DateTime extends \DateTime
     protected function addMicroseconds($microseconds)
     {
         if ($microseconds < 0) {
-            throw new \InvalidArgumentException("Value of microseconds should be positive.");
+            throw new InvalidArgumentException('Value of microseconds should be positive.');
         }
 
         $diff = $this->getMicroseconds() + $microseconds;
@@ -128,7 +150,7 @@ class DateTime extends \DateTime
     protected function subMicroseconds($microseconds)
     {
         if ($microseconds < 0) {
-            throw new \InvalidArgumentException("Value of microseconds should be positive.");
+            throw new InvalidArgumentException('Value of microseconds should be positive.');
         }
 
         $diff = $this->getMicroseconds() - $microseconds;
@@ -191,7 +213,8 @@ class DateTime extends \DateTime
      * Added support for microseconds: (+|-)10 mic|micro|microsecond|microseconds
      *
      * @param string $modify
-     * @return \DateTime
+     *
+     * @return BaseDateTime
      */
     public function modify($modify)
     {
@@ -218,21 +241,22 @@ class DateTime extends \DateTime
     /**
      * Returns the difference between two DateTime objects represented as a DateInterval.
      *
-     * @param \DateTime $datetime
+     * @param BaseDateTime $datetime
      * @param bool|false $absolute
+     *
+     * @throws InvalidArgumentException In case of $datetime is not a DateTime nor a oat\dtms\DateTime object.
      * @return DateInterval
-     * @throws \InvalidArgumentException In case of $datetime is not a DateTime nor a oat\dtms\DateTime object.
      */
-    public function diff($datetime, $absolute = false)
+    public function diff($datetime, $absolute = false): BaseDateInterval
     {
         $d1 = clone $this;
 
-        if ($datetime instanceof \DateTime) {
+        if ($datetime instanceof BaseDateTime) {
             $d2 = new static($datetime->format(DateTime::ISO8601));
         } elseif ($datetime instanceof DateTime) {
             $d2 = clone $datetime;
         } else {
-            throw new \InvalidArgumentException('First Argument must be an instance of DateTime or oat\dtms\DateTime');
+            throw new InvalidArgumentException('First Argument must be an instance of DateTime or oat\dtms\DateTime');
         }
 
         $d1Ts = $d1->getTimestampWithMicroseconds();
