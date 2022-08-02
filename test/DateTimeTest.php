@@ -22,6 +22,7 @@ namespace oat\dtms\Test;
 
 use oat\dtms\DateTime;
 use oat\dtms\DateInterval;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class DateTimeTest extends TestCase
@@ -134,7 +135,7 @@ class DateTimeTest extends TestCase
         $this->invokeMethod($dt, 'addMicroseconds', array(1876544));
         $this->assertEquals('1439028612.000000', $dt->format('U.u'));
 
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Value of microseconds should be positive.');
 
         $dt = new DateTime('2015-08-08 10:10:10.123456');
@@ -166,7 +167,7 @@ class DateTimeTest extends TestCase
         $this->invokeMethod($dt, 'subMicroseconds', array(1123456));
         $this->assertEquals('1439028609.000000', $dt->format('U.u'));
 
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Value of microseconds should be positive.');
 
         $dt = new DateTime('2015-08-08 10:10:10.123456');
@@ -560,11 +561,11 @@ class DateTimeTest extends TestCase
 
     public function testDiffInvalidArgument(): void
     {
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First Argument must be an instance of DateTime or oat\dtms\DateTime');
 
         $dt1 = new DateTime('1985-11-27 10:00:05.990000');
-        $diff = $dt1->diff(new \stdClass());
+        $dt1->diff(new \stdClass());
     }
 
     /**
