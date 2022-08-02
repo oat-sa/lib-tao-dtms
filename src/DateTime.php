@@ -18,8 +18,6 @@
  * Copyright (c) 2022 (original work) Open Assessment Technologies SA.
  */
 
-declare(strict_types=1);
-
 namespace oat\dtms;
 
 use DateTimeZone;
@@ -35,11 +33,54 @@ class DateTime extends BaseDateTime
     public const ISO8601 = 'Y-m-d\TH:i:s.u\Z';
 
     /**
-     * Current number of microseconds.
-     *
-     * @var int
+     * @var int Current number of microseconds.
      */
     public $microseconds;
+
+    /**
+     * Sets microseconds data to object.
+     *
+     * @param $microseconds
+     */
+    public function setMicroseconds($microseconds)
+    {
+        $this->microseconds = intval($microseconds);
+    }
+
+    /**
+     * Gets microseconds data from object
+     *
+     * @param boolean $asSeconds If defined, microseconds will be converted to seconds with fractions
+     * @return int|float
+     */
+    public function getMicroseconds($asSeconds = false)
+    {
+        if ($asSeconds) {
+            return round($this->microseconds * 1/1e6, 6);
+        }
+
+        return intval($this->microseconds);
+    }
+
+    /**
+     * Parse a string into a new DateTime object according to the specified format
+     *
+     * @param string $format
+     * @param string $time
+     * @param null $timezone
+     *
+     * @return DateTime|BaseDateTime
+     */
+    public static function createFromFormat($format, $time, $timezone = null)
+    {
+        if ($timezone === null) {
+            $timezone = new DateTimeZone(date_default_timezone_get());
+        }
+
+        $datetime = BaseDateTime::createFromFormat($format, $time, $timezone);
+
+        return new self($datetime->format(DateTime::ISO8601), $timezone);
+    }
 
     /**
      * Instantiates custom DateTime object with support of microseconds.
@@ -54,70 +95,17 @@ class DateTime extends BaseDateTime
         }
 
         $nativeTime = new BaseDateTime($time, $timezone);
-        [$u, $s] = $time === 'now'
+        [$u, $s] = $time == 'now'
             ? explode(' ', microtime())
-            : [
+            : array(
                 $nativeTime->format('u') / 1e6,
                 $nativeTime->getTimestamp()
-            ];
+            );
 
-        $time = BaseDateTime::createFromFormat(
-            'U.u',
-            implode(
-                '.',
-                [
-                    $s,
-                    str_replace('0.', '', sprintf('%6f', $u))
-                ]
-            )
-        );
+        $time = BaseDateTime::createFromFormat('U.u', join('.', array($s, str_replace('0.', '', sprintf('%6f', $u)))));
         $this->microseconds = $time->format('u') ?: 0;
 
         parent::__construct($time->format(static::ISO8601), $timezone);
-    }
-
-    /**
-     * Parse a string into a new DateTime object according to the specified format
-     *
-     * @param string $format
-     * @param string $time
-     * @param DateTimeZone|null $timezone
-     *
-     * @return DateTime|BaseDateTime
-     */
-    public static function createFromFormat($format, $time, $timezone = null)
-    {
-        if ($timezone === null) {
-            $timezone = new DateTimeZone(date_default_timezone_get());
-        }
-
-        $datetime = BaseDateTime::createFromFormat($format, $time, $timezone);
-
-        return new self($datetime->format(static::ISO8601), $timezone);
-    }
-
-    /**
-     * Sets microseconds data to object.
-     */
-    public function setMicroseconds($microseconds)
-    {
-        $this->microseconds = (int) $microseconds;
-    }
-
-    /**
-     * Gets microseconds data from object
-     *
-     * @param boolean $asSeconds If defined, microseconds will be converted to seconds with fractions
-     *
-     * @return int|float
-     */
-    public function getMicroseconds($asSeconds = false)
-    {
-        if ($asSeconds) {
-            return round($this->microseconds * 1/1e6, 6);
-        }
-
-        return (int) $this->microseconds;
     }
 
     /**
@@ -132,6 +120,8 @@ class DateTime extends BaseDateTime
 
     /**
      * Subtracts an amount of microseconds from a DateTime object
+     *
+     * @param $microseconds
      */
     protected function addMicroseconds($microseconds)
     {
@@ -145,7 +135,7 @@ class DateTime extends BaseDateTime
 
         if ($diff >= 1e6) {
             $diff -= 1e6;
-            ++$seconds;
+            $seconds++;
         }
 
         $this->modify("+$seconds seconds");
@@ -154,6 +144,8 @@ class DateTime extends BaseDateTime
 
     /**
      * Adds an amount of microseconds to a DateTime object
+     *
+     * @param $microseconds
      */
     protected function subMicroseconds($microseconds)
     {
@@ -167,7 +159,7 @@ class DateTime extends BaseDateTime
 
         if ($diff < 0) {
             $diff = abs($diff);
-            ++$seconds;
+            $seconds++;
         }
 
         $this->modify("$seconds seconds");
@@ -178,7 +170,6 @@ class DateTime extends BaseDateTime
      * Adds an amount of days, months, years, hours, minutes, seconds and microseconds to a DateTime object
      *
      * @param DateInterval $interval
-     *
      * @return DateTime $this
      */
     public function add($interval)
@@ -200,7 +191,6 @@ class DateTime extends BaseDateTime
      * Subtracts an amount of days, months, years, hours, minutes and seconds from a DateTime object
      *
      * @param DateInterval $interval
-     *
      * @return DateTime $this
      */
     public function sub($interval)
@@ -230,8 +220,7 @@ class DateTime extends BaseDateTime
     {
         if (preg_match('/(\+|-)([0-9]+)(?:\s?)(?:microseconds|microsecond|micro|mic)$/', $modify, $matches)) {
             $modify = str_replace($matches[0], '', $modify);
-            $number = (int) $matches[2];
-
+            $number = intval($matches[2]);
             switch ($matches[1]) {
                 case '-':
                     $this->subMicroseconds($number);
@@ -256,7 +245,6 @@ class DateTime extends BaseDateTime
      * @param bool|false $absolute
      *
      * @throws InvalidArgumentException In case of $datetime is not a DateTime nor a oat\dtms\DateTime object.
-     *
      * @return DateInterval
      */
     public function diff($datetime, $absolute = false): BaseDateInterval
@@ -264,7 +252,7 @@ class DateTime extends BaseDateTime
         $d1 = clone $this;
 
         if ($datetime instanceof BaseDateTime) {
-            $d2 = new static($datetime->format(static::ISO8601));
+            $d2 = new static($datetime->format(DateTime::ISO8601));
         } elseif ($datetime instanceof DateTime) {
             $d2 = clone $datetime;
         } else {
@@ -275,8 +263,10 @@ class DateTime extends BaseDateTime
         $d2Ts = $d2->getTimestampWithMicroseconds();
         $negative = $d1Ts > $d2Ts;
 
-        $d1u = round($d1Ts - (int) $d1Ts, 6);
-        $d2u = round($d2Ts - (int) $d2Ts, 6);
+        $d1s = intval($d1Ts);
+        $d2s = intval($d2Ts);
+        $d1u = round($d1Ts - $d1s, 6);
+        $d2u = round($d2Ts - $d2s, 6);
 
         if (!$negative) {
             $comparison = $d2u < $d1u;
@@ -287,7 +277,7 @@ class DateTime extends BaseDateTime
         }
 
         if ($u < 0) {
-            ++$u;
+            $u += 1;
         }
 
         if ($comparison) {
@@ -295,14 +285,13 @@ class DateTime extends BaseDateTime
         }
 
         $interval = new DateInterval('PT0.000000S');
-
         foreach (get_object_vars(parent::diff($d2)) as $property => $value) {
             $interval->{$property} = $value;
         }
 
 
         $interval->u = round($u, 6) * 1e6;
-        $interval->invert = $absolute ? false : $negative;
+        $interval->invert = $absolute ? false : $negative;;
 
         return $interval;
     }
