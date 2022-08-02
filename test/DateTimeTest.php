@@ -1,20 +1,34 @@
 <?php
 
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2022 (original work) Open Assessment Technologies SA.
+ */
+
 namespace oat\dtms\Test;
 
-use oat\dtms\DateInterval;
 use oat\dtms\DateTime;
+use oat\dtms\DateInterval;
+use PHPUnit\Framework\TestCase;
 
-class DateTimeTest extends \PHPUnit_Framework_TestCase
+class DateTimeTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         date_default_timezone_set('UTC');
-    }
-
-    public function tearDown()
-    {
-        // do nothing
     }
 
     public function invokeMethod(&$object, $methodName, array $parameters = array())
@@ -29,7 +43,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::getMicroseconds
      */
-    public function testSetMicroseconds()
+    public function testSetMicroseconds(): void
     {
         $dt = new DateTime();
         $dt->setMicroseconds(123456);
@@ -50,7 +64,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::getMicroseconds
      */
-    public function testGetMicroseconds()
+    public function testGetMicroseconds(): void
     {
         $dt = new DateTime();
         $dt->microseconds = 123456;
@@ -65,7 +79,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::createFromFormat
      */
-    public function testCreateFromFormat()
+    public function testCreateFromFormat(): void
     {
         $dt1 = new DateTime('2015-08-08 10:10:10.123456');
         $dt2 = DateTime::createFromFormat(DateTime::ISO8601, '2015-08-08T10:10:10.123456Z');
@@ -76,7 +90,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::__construct
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $dt = new DateTime();
         $this->assertInstanceOf('oat\\dtms\\DateTime', $dt);
@@ -89,7 +103,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::getTimestampWithMicroseconds
      */
-    public function testGetTimestampWithMicroseconds()
+    public function testGetTimestampWithMicroseconds(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $this->assertSame(1439028610 + 123456 / 1e6, $dt->getTimestampWithMicroseconds());
@@ -98,7 +112,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::addMicroseconds
      */
-    public function testAddMicroseconds()
+    public function testAddMicroseconds(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $this->invokeMethod($dt, 'addMicroseconds', array(0));
@@ -120,9 +134,9 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $this->invokeMethod($dt, 'addMicroseconds', array(1876544));
         $this->assertEquals('1439028612.000000', $dt->format('U.u'));
 
-        $this->setExpectedException(
-            'InvalidArgumentException', 'Value of microseconds should be positive.'
-        );
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Value of microseconds should be positive.');
+
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $this->invokeMethod($dt, 'addMicroseconds', array(-111111));
     }
@@ -130,7 +144,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::subMicroseconds
      */
-    public function testSubMicroseconds()
+    public function testSubMicroseconds(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $this->invokeMethod($dt, 'subMicroseconds', array(0));
@@ -152,9 +166,9 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $this->invokeMethod($dt, 'subMicroseconds', array(1123456));
         $this->assertEquals('1439028609.000000', $dt->format('U.u'));
 
-        $this->setExpectedException(
-            'InvalidArgumentException', 'Value of microseconds should be positive.'
-        );
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Value of microseconds should be positive.');
+
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $this->invokeMethod($dt, 'subMicroseconds', array(-111111));
     }
@@ -162,7 +176,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::add
      */
-    public function testAdd()
+    public function testAdd(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $dt->add(new DateInterval('PT0.000000S'));
@@ -201,7 +215,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::sub
      */
-    public function testSub()
+    public function testSub(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $dt->sub(new DateInterval('PT0.000000S'));
@@ -240,7 +254,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::modify
      */
-    public function testModify()
+    public function testModify(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $dt->modify('+10 microseconds');
@@ -318,19 +332,19 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::diff
      */
-    public function testDiff()
+    public function testDiff(): void
     {
         // Using oat\dtms\DateTime objects for both date 1 & date 2.
         $dt1 = new DateTime('2005-10-10 23:57:01.100000');
         $dt2 = new DateTime('2005-10-10 23:59:01.050000');
         $this->assertEquals('+PT1M59.950000S', $dt1->diff($dt2)->format('%RPT%iM%sS'));
         $this->assertEquals('-PT1M59.950000S', $dt2->diff($dt1)->format('%RPT%iM%sS'));
-        
+
         $dt1 = new DateTime('2005-10-10 23:59:01.555554');
         $dt2 = new DateTime('2005-12-30 23:59:01.555555');
         $this->assertEquals('+P2M20DT0.000001S', $dt1->diff($dt2)->format('%RP%mM%dDT%sS'));
         $this->assertEquals('-P2M20DT0.000001S', $dt2->diff($dt1)->format('%RP%mM%dDT%sS'));
-        
+
         $dt1 = new DateTime('2015-08-08 10:10:10.123456');
         $dt2 = new DateTime('2015-08-08 10:10:05.654321');
         $this->assertEquals('-PT4.469135S', $dt1->diff($dt2)->format('%RPT%sS'));
@@ -544,8 +558,11 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('-P31Y10M1DT0H0M5.000001S', $dt2->diff($dt1)->format('%RP%yY%mM%dDT%hH%iM%sS'));
     }
 
-    public function testDiffInvalidArgument() {
-        $this->setExpectedException('\InvalidArgumentException');
+    public function testDiffInvalidArgument(): void
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('First Argument must be an instance of DateTime or oat\dtms\DateTime');
+
         $dt1 = new DateTime('1985-11-27 10:00:05.990000');
         $diff = $dt1->diff(new \stdClass());
     }
@@ -553,7 +570,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::__toString
      */
-    public function testToString()
+    public function testToString(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $this->assertSame('2015-08-08T10:10:10.123456Z', '' . $dt);
@@ -568,7 +585,7 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \oat\dtms\DateTime::format
      */
-    public function testFormat()
+    public function testFormat(): void
     {
         $dt = new DateTime('2015-08-08 10:10:10.123456');
         $this->assertSame('08.08.2015 10:10:10.123456', $dt->format('d.m.Y H:i:s.u'));
