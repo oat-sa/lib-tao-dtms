@@ -30,7 +30,7 @@ class DateTime extends BaseDateTime
     /**
      * Improved ISO8601 format string with support of microseconds.
      */
-    public const ISO8601 = 'Y-m-d\TH:i:s.u\Z';
+    public const string ISO8601 = 'Y-m-d\TH:i:s.u\Z';
 
     /**
      * @var int Current number of microseconds.
