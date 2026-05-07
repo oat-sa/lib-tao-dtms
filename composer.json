@@ -21,7 +21,7 @@
         "issues": "https://github.com/oat-sa/lib-tao-dtms/issues"
     },
     "require": {
-        "php" : "^7.4 || ~8"
+        "php" : "^8.4"
     },
     "require-dev": {
         "phpunit/phpunit" : "4.*"
